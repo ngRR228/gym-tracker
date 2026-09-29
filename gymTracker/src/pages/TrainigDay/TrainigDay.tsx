@@ -6,11 +6,12 @@ export default function TrainigDay () {
     const location = useLocation()
     const { day } = location.state || {}
 
+console.log(day);
 
 
     
     return (
-        <h1>TrainigDay 1</h1>
+        <h1>TrainigDay {day.year} {day.month} {day.calendarDay}</h1>
 
 
     )

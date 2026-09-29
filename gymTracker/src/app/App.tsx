@@ -1,5 +1,5 @@
 
-import {  Route, Routes, useNavigate } from 'react-router-dom'
+import {  Route, Routes } from 'react-router-dom'
 import './App.css'
 import Header from '../pages/Header/Header'
 import HomePage from '../pages/HomePage/HomePage'
@@ -18,8 +18,7 @@ function App() {
     <Routes>
           <Route path='/' element={<HomePage/>} />
           <Route path='/calendar' element={<CalendarPage />} />
-         {/* <Route path={`/${day.year}/${day.month}/${day.calendarDay}`} element={<TrainigDay/>} />
-         <Route path="/:year/:month/:day" element={<CalendarPage />} /> */}
+          <Route path="/:year/:month/:day" element={<TrainigDay />} /> 
       </Routes>
       <Footer />
     

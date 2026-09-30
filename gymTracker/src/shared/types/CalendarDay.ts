@@ -1,5 +1,5 @@
 
-export interface CalendarDay  {
+export type CalendarDay  = {
     calendarDay: number,
     month: string,
     year: number,

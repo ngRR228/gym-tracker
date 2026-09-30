@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import styles from "./CalendarPage.module.css"
 import { useNavigate } from "react-router-dom";
-import type { CalendarDay } from "../../shared/types/Day";
+import type { CalendarDay } from "../../shared/types/CalendarDay";
 
 
 export default function CalendarPage () {
@@ -13,7 +13,6 @@ export default function CalendarPage () {
 
 
 const[mark, setMark] = useState<number[]>([])
-
 const [currentDay , setCurrentDay] = useState<Date>(new Date())
 const[currentMonthNumberState , setCurrentMonthNumber] = useState<number>(currentDay.getMonth())
 const[currentYearNumberState , setCurrentYearNumber] = useState<number>(currentDay.getFullYear())
@@ -49,8 +48,6 @@ useEffect(() => {
 setDays(generateDays(currentYearNumberState , currentMonthNumberState))
 }, [currentMonthNumberState , currentYearNumberState])
 
-//let test1 = new Date (2026 , 4 , 14)
-
 
    const navigate =  useNavigate() 
 
@@ -60,27 +57,29 @@ setDays(generateDays(currentYearNumberState , currentMonthNumberState))
     if(mark.includes(day)){
     setMark(mark.filter((e) => e !== day))   
     } else{
-    setMark([...mark , day])
+    setMark([...mark , day.calendarDay])
     }
-
+    console.log(mark);
+    
     setTimeout(() => {
    navigate(`/${day.year}/${day.month}/${day.calendarDay}` , {state: {day: day}})
     }, 1000);
     }
 
-
-   // const {year , month , day} = useParams()
-
     return(
         <>
         <h1>calendar</h1>
         <p>year: {currentYearNumberState}</p>
+
+        <div className={styles.btn }>
         <button onClick={() => {
         setCurrentYearNumber(prevYear => prevYear - 1)
         }}>show prev year</button>
          <button onClick={() => {
             setCurrentYearNumber (currentYear => currentYear  + 1 )
          }}>show next year</button>
+        </div>
+
         <p>month:{currentMonth}</p>
             <button onClick={() => {
        currentMonthNumberState === 0 ? setCurrentMonthNumber(11) : setCurrentMonthNumber(prevMonth => prevMonth - 1) 
@@ -88,16 +87,16 @@ setDays(generateDays(currentYearNumberState , currentMonthNumberState))
         <button onClick={() => {
            currentMonthNumberState === 11 ? setCurrentMonthNumber(0) : setCurrentMonthNumber(currentMonth => currentMonth + 1)
         }}>next month</button>
-
         <button onClick={() => {
             setCurrentMonthNumber(new Date().getMonth())
                 setCurrentYearNumber(new Date().getFullYear())
         }}>return to current date</button>
+
         <div className={styles.calendar}>
             {days.map((day) => (
                 <ul key={day.calendarDay}>
                     <li className={styles.number}>
-                        <button className={`${styles.buttonMark} ${mark.includes(day.calendarDay) ? styles.marked : ""}`}
+                        <button className={`${styles.buttonMark}  ${mark.includes(day.calendarDay) ? styles.marked : ""}`}
                          onClick={() => {
                             markAsDone(day)
                          }}>{day.calendarDay}</button>

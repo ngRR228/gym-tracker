@@ -1,13 +1,11 @@
 import type { CalendarDay } from "./CalendarDay"
-
+import type { Workout } from "./Workout"
 export type WorkoutDay = CalendarDay & {
-    calendarDay: number,
-    month: string,
-    year: number,
-    id: number | string
-    workout: string & number
-    // exercise: string ,
-    // sets: number ,
-    // reps: number 
+    calendarDay: number;
+    month: string;
+    year: number;
+    id: number | string;
+    
+    workout: Workout[] ;
 }
 

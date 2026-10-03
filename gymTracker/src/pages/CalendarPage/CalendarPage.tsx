@@ -13,19 +13,14 @@ export default function CalendarPage () {
 
 
 const[mark, setMark] = useState<number[]>([])
-const [currentDay , setCurrentDay] = useState<Date>(new Date())
+const [currentDay ] = useState<Date>(new Date())
 const[currentMonthNumberState , setCurrentMonthNumber] = useState<number>(currentDay.getMonth())
 const[currentYearNumberState , setCurrentYearNumber] = useState<number>(currentDay.getFullYear())
-// let currentMonthNumber =  currentDay.getMonth() 
-// console.log(currentMonthNumber);
-console.log(currentYearNumberState);
+const[days, setDays] = useState<CalendarDay[]>([])
+
+   const navigate =  useNavigate() 
 
 const currentMonth = months[currentMonthNumberState] 
-console.log(currentMonth);
-
-const[days, setDays] = useState<CalendarDay[]>([])
-// let year = currentDay.getFullYear()
-// let month: string = currentMonth
 let calendarDay = currentDay.getDate()
 
 function generateDays (year, currentMonthNumberState, ): CalendarDay[] {
@@ -43,17 +38,13 @@ for(let day = 1 ; day <= daysInMonth ; day++){
 return daysAmount
 
 }
-//console.log(generateDays(currentDay.getFullYear() , currentDay.getMonth()));
 useEffect(() => {
 setDays(generateDays(currentYearNumberState , currentMonthNumberState))
 }, [currentMonthNumberState , currentYearNumberState])
 
 
-   const navigate =  useNavigate() 
-
     function markAsDone (day) {
         console.log(day);
-        
     if(mark.includes(day)){
     setMark(mark.filter((e) => e !== day))   
     } else{
@@ -67,7 +58,7 @@ setDays(generateDays(currentYearNumberState , currentMonthNumberState))
     }
 
     return(
-        <>
+        <div className={styles.page}>
         <h1>calendar</h1>
         <p>year: {currentYearNumberState}</p>
 
@@ -81,13 +72,13 @@ setDays(generateDays(currentYearNumberState , currentMonthNumberState))
         </div>
 
         <p>month:{currentMonth}</p>
-            <button onClick={() => {
+            <button className={styles.controls} onClick={() => {
        currentMonthNumberState === 0 ? setCurrentMonthNumber(11) : setCurrentMonthNumber(prevMonth => prevMonth - 1) 
         }}>prev month</button>
-        <button onClick={() => {
+        <button className={styles.controls} onClick={() => {
            currentMonthNumberState === 11 ? setCurrentMonthNumber(0) : setCurrentMonthNumber(currentMonth => currentMonth + 1)
         }}>next month</button>
-        <button onClick={() => {
+        <button className={styles.controls} onClick={() => {
             setCurrentMonthNumber(new Date().getMonth())
                 setCurrentYearNumber(new Date().getFullYear())
         }}>return to current date</button>
@@ -106,6 +97,6 @@ setDays(generateDays(currentYearNumberState , currentMonthNumberState))
             ))}
 
         </div>
-        </>
+        </div>
     )
 }

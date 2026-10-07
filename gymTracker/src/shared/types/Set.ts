@@ -1,4 +1,4 @@
 export type Set = {
     setNumber: number ,
-    reps: number
+    reps?: number
 }

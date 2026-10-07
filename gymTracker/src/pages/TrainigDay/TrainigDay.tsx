@@ -4,12 +4,13 @@ import { useEffect, useState } from "react"
 import type { WorkoutDay } from "../../shared/types/WorkoutDay"
 import type { Workout } from "../../shared/types/Workout"
 import benchPress from "../../shared/assets/gymMachines/benchPress.png"
+import type { Set } from "../../shared/types/Set"
 
 export default function TrainigDay () {
 
 const location = useLocation()
 const { day } = location.state || {}
-const[workout , setWorkout] = useState<Workout[]>
+const[workout , setWorkout] = useState<Workout[] | []>
 //{setNumber: 2 , reps: 3 }
 ([{id: 1 , exercise: "bench press" , exerciseImg:benchPress ,  sets:[{setNumber: 1 , reps: 10 }]}] )
 //([{id: 1 , exercise: "bench press" , exerciseImg:benchPress ,  sets:[]}])
@@ -24,14 +25,18 @@ const[workoutDay , setWorkoutDay] = useState<WorkoutDay>({
 })
 
 function addSet (currentWorkout: Workout ):Workout[] {
-  let newArr =  currentWorkout.sets.map((w) => { 
-         console.log(w.setNumber);
-     return w.setNumber
-    })
-let newId = Math.max(...newArr) + 1
+    let newArr = 
+    currentWorkout.sets.map((w) => { 
+    console.log("map sets" , w.setNumber);
+    return w.setNumber
+    }) 
+     
+let newId = newArr.length >= 1 ?  Math.max(...newArr) + 1 : 1
+console.log(newId)
+
 let meow = workout.map((w) => {
     if(currentWorkout.id === w.id) {
-        setWorkout([{...currentWorkout  , sets:[...currentWorkout.sets , {setNumber: newId  , reps: 11} ]}])
+        setWorkout([{...currentWorkout  , sets:[...currentWorkout.sets , {setNumber: newId  } ]}])
         return workout
     }
 })
@@ -39,27 +44,31 @@ let meow = workout.map((w) => {
 }
 
 function updateReps (w:Workout  , setNum : number , inputValueAsNumber: number) {
-       let res = w.sets.map((s) => {
+    console.log("updt");
+    let res = w.sets.map((s) => {
+        if(s.setNumber === setNum){
             console.log(s);
-            if(s.setNumber === setNum){
-                return {...s , reps: inputValueAsNumber}
-                
-            } else {
-                return s
-            }
-            
-        })
-        setWorkout([{...w , sets: res}])
-        return res
+            return {...s , reps: inputValueAsNumber}
+        } else {
+            return s
+        }
+    })
+    setWorkout([{...w , sets: res}])    
 }
 
+
+
+function deleteSet (w: Workout , set: Set ) {
+ let result = w.sets.filter((s) => set.setNumber !== s.setNumber)
+ console.log(result);
+ setWorkout([{...w , sets: result}])    
+}
     return (
         <>
         <h1>TrainigDay {day.year} {day.month} {day.calendarDay}</h1>
         <div className={styles.todaysProgram}>
 
             <input type="text" className={styles.exerciesList} />
-
         {workout.map((w) => (
             <ul key={w.id} className={styles.exerciseDiv}>
                 <li>{w.exercise}</li>
@@ -67,13 +76,12 @@ function updateReps (w:Workout  , setNum : number , inputValueAsNumber: number) 
                 <div className={styles.setNumberAndReps}>
                 <li><button onClick={() => addSet(w)}>add set</button></li>
                 <li>{w.sets.map((set) => (
-                    <div className="" key={set.setNumber} >
-                        <p>test reps{set.reps}</p>
-                    <p>set number: {set.setNumber}</p>
+                    <div className="" key={set.setNumber}>
+                        <p>reps: {typeof set.reps === "number" && !isNaN(set.reps) ? set.reps : "no reps yet"}</p>
+                    <p>set number: {set.setNumber }</p>
                     <input type="number" value={set.reps} onChange={(e) => updateReps(w , set.setNumber ,  e.target.valueAsNumber)
-                        // updateReps(w, set , set.setNumber , set.reps , e.target.valueAsNumber)
                          }/>
-                    <button>×</button>
+                    <button onClick={() => deleteSet(w , set) } >×</button>
 
 
                     </div>

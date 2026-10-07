@@ -3,7 +3,7 @@
   min-height: 100vh;
   color: #222a27;
   background: #f5f6f4;
-  transition: background-color 160ms ease, color 160ms ease;
+  transition: background-color 500ms ease, color 500ms ease;
 }
 
 .dark {

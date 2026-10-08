@@ -1,20 +1,27 @@
 import { useLocation } from "react-router-dom"
 import styles from "./TrainigDay.module.css"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import type { WorkoutDay } from "../../shared/types/WorkoutDay"
 import type { Workout } from "../../shared/types/Workout"
 import benchPress from "../../shared/assets/gymMachines/benchPress.png"
 import type { Set } from "../../shared/types/Set"
+import ButtonMark from "../../components/ButtonMark/ButtonMark"
+import ExercisesFinder from "../../components/ExercisesFinder/ExercisesFinder"
+import { exersicesList } from "../../shared/Exercises/exersicesList"
+import type { Exercise } from "../../shared/types/Exercise"
 
 export default function TrainigDay () {
 
 const location = useLocation()
 const { day } = location.state || {}
+
+console.log("day", day);
+
+
 const[workout , setWorkout] = useState<Workout[] | []>
-//{setNumber: 2 , reps: 3 }
 ([{id: 1 , exercise: "bench press" , exerciseImg:benchPress ,  sets:[{setNumber: 1 , reps: 10 }]}] )
-//([{id: 1 , exercise: "bench press" , exerciseImg:benchPress ,  sets:[]}])
-console.log(workout);
+
+
 
 const[workoutDay , setWorkoutDay] = useState<WorkoutDay>({
         calendarDay: day.calendarDay ,
@@ -34,7 +41,7 @@ function addSet (currentWorkout: Workout ):Workout[] {
 let newId = newArr.length >= 1 ?  Math.max(...newArr) + 1 : 1
 console.log(newId)
 
-let meow = workout.map((w) => {
+ workout.map((w) => {
     if(currentWorkout.id === w.id) {
         setWorkout([{...currentWorkout  , sets:[...currentWorkout.sets , {setNumber: newId  } ]}])
         return workout
@@ -56,6 +63,11 @@ function updateReps (w:Workout  , setNum : number , inputValueAsNumber: number) 
     setWorkout([{...w , sets: res}])    
 }
 
+useEffect(() => {
+console.log("u have changed the workout");
+
+}, [workout , setWorkout])
+
 
 
 function deleteSet (w: Workout , set: Set ) {
@@ -63,12 +75,23 @@ function deleteSet (w: Workout , set: Set ) {
  console.log(result);
  setWorkout([{...w , sets: result}])    
 }
+// import all exerciseslist ,
+//  then make a function that is gonna update our wrokout array when we click an add button
+// convey this func using props to children component 
+
+function addExercise (workout : Workout[], exersicesList: Exercise[]) {
+    console.log("func is working")
+    
+}
     return (
         <>
         <h1>TrainigDay {day.year} {day.month} {day.calendarDay}</h1>
         <div className={styles.todaysProgram}>
+            
+            <ExercisesFinder  onAddExercise={addExercise}/>
 
-            <input type="text" className={styles.exerciesList} />
+            <ButtonMark Day = {day}/>
+        
         {workout.map((w) => (
             <ul key={w.id} className={styles.exerciseDiv}>
                 <li>{w.exercise}</li>
@@ -77,8 +100,8 @@ function deleteSet (w: Workout , set: Set ) {
                 <li><button onClick={() => addSet(w)}>add set</button></li>
                 <li>{w.sets.map((set) => (
                     <div className="" key={set.setNumber}>
+                            <p>set number: {set.setNumber }</p>
                         <p>reps: {typeof set.reps === "number" && !isNaN(set.reps) ? set.reps : "no reps yet"}</p>
-                    <p>set number: {set.setNumber }</p>
                     <input type="number" value={set.reps} onChange={(e) => updateReps(w , set.setNumber ,  e.target.valueAsNumber)
                          }/>
                     <button onClick={() => deleteSet(w , set) } >×</button>

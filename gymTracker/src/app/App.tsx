@@ -14,7 +14,6 @@ function App() {
 //  const{currentTheme , setCurrentTheme} = useContext(contextTheme)
 //  console.log(currentTheme);
      const {currentTheme , setCurrentTheme} = useContext(contextTheme)
-     console.log(currentTheme);
      
   return (
     <>

@@ -1,7 +1,8 @@
+import type { Exercise } from "./Exercise"
 import type { Set } from "./Set"
-export type Workout = {
-    id: number
-    exercise: string ,
-    exerciseImg: string ,
+export interface Workout extends Exercise {
+    // id: number
+    // exercise: string ,
+    // exerciseImg: string ,
     sets: Set[]
 }

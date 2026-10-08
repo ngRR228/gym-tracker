@@ -6,13 +6,15 @@ import type { CalendarDay } from "../../shared/types/CalendarDay";
 
 export default function CalendarPage () {
 
+  
+
     const months: string[] = [
   "january", "february", "march", "april", "may", "june",
   "july", "august", "september", "october", "november", "december"
 ];
 
 
-const[mark, setMark] = useState<number[]>([])
+const[mark, setMark] = useState<number[] | string[]>([])
 const [currentDay ] = useState<Date>(new Date())
 const[currentMonthNumberState , setCurrentMonthNumber] = useState<number>(currentDay.getMonth())
 const[currentYearNumberState , setCurrentYearNumber] = useState<number>(currentDay.getFullYear())
@@ -21,7 +23,7 @@ const[days, setDays] = useState<CalendarDay[]>([])
    const navigate =  useNavigate() 
 
 const currentMonth = months[currentMonthNumberState] 
-let calendarDay = currentDay.getDate()
+
 
 function generateDays (year, currentMonthNumberState, ): CalendarDay[] {
  let month: string = months[currentMonthNumberState]
@@ -32,7 +34,7 @@ for(let day = 1 ; day <= daysInMonth ; day++){
         calendarDay: day ,
         month: month ,
         year: year,
-        id: `${year}-${month}-${calendarDay}`
+        id: `${year}-${month}-${day}`
     })
 }
 return daysAmount
@@ -42,16 +44,26 @@ useEffect(() => {
 setDays(generateDays(currentYearNumberState , currentMonthNumberState))
 }, [currentMonthNumberState , currentYearNumberState])
 
+function addMarkedDays () {
+const saved = localStorage.getItem("marked")
+let markedArr = 
+//JSON.parse(saved) ? 
+saved ? JSON.parse(saved)  : []
+let daysToChange = markedArr.map((d) => d.id )
+console.log("days to change" , daysToChange)
 
-    function markAsDone (day) {
-        console.log(day);
-    if(mark.includes(day)){
-    setMark(mark.filter((e) => e !== day))   
-    } else{
-    setMark([...mark , day.calendarDay])
-    }
-    console.log(mark);
-    
+setMark([...mark, ...daysToChange])
+}
+useEffect(() => {
+addMarkedDays()
+}, [])
+
+console.log(mark);
+
+
+
+    function conveyDay (day) {
+        console.log(day);    
     setTimeout(() => {
    navigate(`/${day.year}/${day.month}/${day.calendarDay}` , {state: {day: day}})
     }, 1000);
@@ -87,10 +99,12 @@ setDays(generateDays(currentYearNumberState , currentMonthNumberState))
             {days.map((day) => (
                 <ul key={day.calendarDay}>
                     <li className={styles.number}>
-                        <button className={`${styles.buttonMark}  ${mark.includes(day.calendarDay) ? styles.marked : ""}`}
+                       
+                        <button className={`${styles.buttonMark}  ${mark.includes(day.id) ? styles.marked : ""}`}
                          onClick={() => {
-                            markAsDone(day)
-                         }}>{day.calendarDay}</button>
+                            conveyDay(day)
+                         }}
+                         >{day.calendarDay}</button>
                         </li>
                          <li>{day.month}</li>
                 </ul>

@@ -51,7 +51,6 @@ let markedArr =
 saved ? JSON.parse(saved)  : []
 let daysToChange = markedArr.map((d) => d.id )
 console.log("days to change" , daysToChange)
-
 setMark([...mark, ...daysToChange])
 }
 useEffect(() => {
